@@ -1,16 +1,35 @@
 import sys
-sys.path.append('..')
 
-import os
-# Make a backup of DJANGO_SETTINGS_MODULE environment variable to restore later.
-backup = os.environ.get('DJANGO_SETTINGS_MODULE', '')
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+from django.conf import settings
 
-from django.test.simple import run_tests
+settings.configure(DEBUG=True,
+                   DATABASES={
+                       'default': {
+                           'ENGINE': 'django.db.backends.sqlite3',
+                       }
+                   },
+                   ROOT_URLCONF='',
+                   INSTALLED_APPS=('django.contrib.auth',
+                                   'django.contrib.contenttypes',
+                                   'django.contrib.sessions',
+                                   'django.contrib.admin',
+                                   'pagination',),
+                   MIDDLEWARE_CLASSES=()
+                   )
+
+import django
+django.setup()
 
 if __name__ == "__main__":
-    failures = run_tests(['pagination',], verbosity=9)
+    try:
+        # Django <= 1.8
+        from django.test.simple import DjangoTestSuiteRunner
+        test_runner = DjangoTestSuiteRunner(verbosity=1)
+    except ImportError:
+        # Django >= 1.8
+        from django.test.runner import DiscoverRunner
+        test_runner = DiscoverRunner(verbosity=1)
+
+    failures = test_runner.run_tests(['pagination'])
     if failures:
         sys.exit(failures)
-    # Reset the DJANGO_SETTINGS_MODULE to what it was before running tests.
-    os.environ['DJANGO_SETTINGS_MODULE'] = backup
