@@ -34,17 +34,17 @@
 >>> class HttpRequest(DjangoHttpRequest):
 ...     page = 1
 
->>> t.render(Context({'var': range(21), 'request': HttpRequest()}))
+>>> t.render(Context({'var': range(21), 'request': HttpRequest()})) # doctest: +ELLIPSIS
 u'\\n\\n<div class="pagination">...
 >>>
 >>> t = Template("{% load pagination_tags %}{% autopaginate var %}{% paginate %}")
->>> t.render(Context({'var': range(21), 'request': HttpRequest()}))
+>>> t.render(Context({'var': range(21), 'request': HttpRequest()})) # doctest: +ELLIPSIS
 u'\\n\\n<div class="pagination">...
 >>> t = Template("{% load pagination_tags %}{% autopaginate var 20 %}{% paginate %}")
->>> t.render(Context({'var': range(21), 'request': HttpRequest()}))
+>>> t.render(Context({'var': range(21), 'request': HttpRequest()})) # doctest: +ELLIPSIS
 u'\\n\\n<div class="pagination">...
 >>> t = Template("{% load pagination_tags %}{% autopaginate var by %}{% paginate %}")
->>> t.render(Context({'var': range(21), 'by': 20, 'request': HttpRequest()}))
+>>> t.render(Context({'var': range(21), 'by': 20, 'request': HttpRequest()})) # doctest: +ELLIPSIS
 u'\\n\\n<div class="pagination">...
 >>> t = Template("{% load pagination_tags %}{% autopaginate var by as foo %}{{ foo }}")
 >>> t.render(Context({'var': range(21), 'by': 20, 'request': HttpRequest()}))
@@ -128,3 +128,11 @@ True
 >>> middleware.process_request(request)
 >>> request.upload_handlers.append('asdf')
 """
+
+
+import doctest
+
+# http://stackoverflow.com/questions/32959760/how-to-get-djangos-unittest-testloader-to-find-and-run-my-doctests
+def load_tests(loader, tests, ignore):
+    tests.addTests(doctest.DocTestSuite())
+    return tests
