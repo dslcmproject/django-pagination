@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.0.11'
+version = '1.0.12'
 
 LONG_DESCRIPTION = """
 How to use django-pagination
@@ -24,7 +24,7 @@ installation, which is covered in INSTALL.txt in this same directory.)
 2. Install the pagination middleware.  Your settings file might look something
    like::
    
-       MIDDLEWARE_CLASSES = (
+       MIDDLEWARE = (
            # ...
            'pagination.middleware.PaginationMiddleware',
        )

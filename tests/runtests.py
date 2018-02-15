@@ -14,7 +14,17 @@ settings.configure(DEBUG=True,
                                    'django.contrib.sessions',
                                    'django.contrib.admin',
                                    'pagination',),
-                   MIDDLEWARE_CLASSES=()
+                   MIDDLEWARE=(),
+                   TEMPLATES = [
+                       {
+                           'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                           'DIRS': [],
+                           'APP_DIRS': True,
+                           'OPTIONS': {
+                               # ... some options here ...
+                               },
+                           },
+                       ]
                    )
 
 import django
