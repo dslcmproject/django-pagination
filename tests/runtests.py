@@ -21,7 +21,9 @@ settings.configure(DEBUG=True,
                            'DIRS': [],
                            'APP_DIRS': True,
                            'OPTIONS': {
-                               # ... some options here ...
+                               'context_processors': [
+                                    'django.contrib.auth.context_processors.auth'
+                                    ],
                                },
                            },
                        ]
@@ -31,14 +33,8 @@ import django
 django.setup()
 
 if __name__ == "__main__":
-    try:
-        # Django <= 1.8
-        from django.test.simple import DjangoTestSuiteRunner
-        test_runner = DjangoTestSuiteRunner(verbosity=1)
-    except ImportError:
-        # Django >= 1.8
-        from django.test.runner import DiscoverRunner
-        test_runner = DiscoverRunner(verbosity=1)
+    from django.test.runner import DiscoverRunner
+    test_runner = DiscoverRunner(verbosity=1)
 
     failures = test_runner.run_tests(['pagination'])
     if failures:

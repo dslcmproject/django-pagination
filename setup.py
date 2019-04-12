@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.0.12'
+version = '1.0.13'
 
 LONG_DESCRIPTION = """
 How to use django-pagination
@@ -32,7 +32,7 @@ installation, which is covered in INSTALL.txt in this same directory.)
 3. If it's not already added in your setup, add the request context processor.
    Note that context processors are set by default implicitly, so to set them
    explicitly, you need to copy and paste this code into your under
-   the value TEMPLATE_CONTEXT_PROCESSORS::
+   the value TEMPLATES / OPTIONS / context_processors:
    
         ("django.core.context_processors.auth",
         "django.core.context_processors.debug",

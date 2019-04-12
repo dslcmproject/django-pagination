@@ -1,4 +1,6 @@
 """
+>>> from __future__ import unicode_literals
+
 >>> from django.core.paginator import Paginator
 >>> from pagination.templatetags.pagination_tags import paginate
 >>> from django.template import Template, Context
@@ -34,26 +36,26 @@
 >>> class HttpRequest(DjangoHttpRequest):
 ...     page = 1
 
->>> t.render(Context({'var': range(21), 'request': HttpRequest()})) # doctest: +ELLIPSIS
-u'\\n\\n<div class="pagination">...
+>>> t.render(Context({'var': range(21), 'request': HttpRequest()})).startswith('\\n\\n<div class="pagination">')
+True
 >>>
 >>> t = Template("{% load pagination_tags %}{% autopaginate var %}{% paginate %}")
->>> t.render(Context({'var': range(21), 'request': HttpRequest()})) # doctest: +ELLIPSIS
-u'\\n\\n<div class="pagination">...
+>>> t.render(Context({'var': range(21), 'request': HttpRequest()})).startswith('\\n\\n<div class="pagination">')
+True
 >>> t = Template("{% load pagination_tags %}{% autopaginate var 20 %}{% paginate %}")
->>> t.render(Context({'var': range(21), 'request': HttpRequest()})) # doctest: +ELLIPSIS
-u'\\n\\n<div class="pagination">...
+>>> t.render(Context({'var': range(21), 'request': HttpRequest()})).startswith('\\n\\n<div class="pagination">')
+True
 >>> t = Template("{% load pagination_tags %}{% autopaginate var by %}{% paginate %}")
->>> t.render(Context({'var': range(21), 'by': 20, 'request': HttpRequest()})) # doctest: +ELLIPSIS
-u'\\n\\n<div class="pagination">...
+>>> t.render(Context({'var': range(21), 'by': 20, 'request': HttpRequest()})).startswith('\\n\\n<div class="pagination">')
+True
 >>> t = Template("{% load pagination_tags %}{% autopaginate var by as foo %}{{ foo }}")
->>> t.render(Context({'var': range(21), 'by': 20, 'request': HttpRequest()}))
-u'[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]'
+>>> t.render(Context({'var': list(range(21)), 'by': 20, 'request': HttpRequest()})) == '[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]'
+True
 >>>
 
 # Testing InfinitePaginator
 
->>> from paginator import InfinitePaginator
+>>> from pagination.paginator import InfinitePaginator
 
 >>> InfinitePaginator
 <class 'pagination.paginator.InfinitePaginator'>
@@ -82,7 +84,7 @@ False
 
 # Testing FinitePaginator
 
->>> from paginator import FinitePaginator
+>>> from pagination.paginator import FinitePaginator
 
 >>> FinitePaginator
 <class 'pagination.paginator.FinitePaginator'>
@@ -122,7 +124,7 @@ True
 
 >>> from pagination.middleware import PaginationMiddleware
 >>> from django.core.handlers.wsgi import WSGIRequest
->>> from StringIO import StringIO
+>>> from django.utils.six import StringIO
 >>> middleware = PaginationMiddleware()
 >>> request = WSGIRequest({'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': 'multipart', 'wsgi.input': StringIO()})
 >>> middleware.process_request(request)
